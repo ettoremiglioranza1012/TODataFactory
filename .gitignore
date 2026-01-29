@@ -1,10 +1,44 @@
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+# Data directories (too large for git)
+data/
+experiments/
+paired_dataset/
+validation/
+*.npy
 
-# Virtual environments
-.venv
+# Build artifacts
+solver/top3d
+solver/src/*.o
+solver/*.o
+TopOpt-in-OpenMP/top3d
+TopOpt-in-OpenMP/*.o
+*.bin
+*.vtu
+*.core
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.ipynb_checkpoints/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/

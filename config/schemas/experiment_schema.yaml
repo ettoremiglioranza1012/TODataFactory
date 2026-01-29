@@ -1,0 +1,128 @@
+# Experiment Configuration Schema
+# Used for validating config files
+
+type: object
+required:
+  - grid
+  - solver
+
+properties:
+  grid:
+    type: object
+    required:
+      - nx
+      - ny
+      - nz
+    properties:
+      nx:
+        type: integer
+        minimum: 8
+        description: Number of elements in X direction
+      ny:
+        type: integer
+        minimum: 8
+        description: Number of elements in Y direction
+      nz:
+        type: integer
+        minimum: 8
+        description: Number of elements in Z direction
+      vol_fraction:
+        type: number
+        minimum: 0.01
+        maximum: 0.99
+        default: 0.2
+        description: Target volume fraction
+
+  solver:
+    type: object
+    properties:
+      nl:
+        type: integer
+        minimum: 1
+        maximum: 5
+        default: 4
+        description: Number of multigrid levels
+      rmin:
+        type: number
+        minimum: 0.1
+        default: 1.5
+        description: Filter radius
+      penal:
+        type: number
+        minimum: 1.0
+        default: 3.0
+        description: SIMP penalization factor
+      max_iter:
+        type: integer
+        minimum: 1
+        default: 20
+        description: Maximum optimization iterations
+
+  hpc:
+    type: object
+    properties:
+      stencil_size_x:
+        type: integer
+        default: 1
+      stencil_size_y:
+        type: integer
+        enum: [4, 8]
+        default: 8
+        description: "4 for AVX2, 8 for AVX-512"
+      stencil_size_z:
+        type: integer
+        default: 1
+      num_threads:
+        type: integer
+        minimum: 1
+        default: 10
+
+  load:
+    type: object
+    properties:
+      total_force:
+        type: number
+        default: -1000.0
+      center_min_frac:
+        type: number
+        minimum: 0.0
+        maximum: 0.5
+        default: 0.2
+      center_max_frac:
+        type: number
+        minimum: 0.5
+        maximum: 1.0
+        default: 0.8
+      radius_min:
+        type: number
+        minimum: 1.0
+        default: 3.0
+      radius_max:
+        type: number
+        minimum: 1.0
+        default: 5.0
+
+  ml:
+    type: object
+    properties:
+      num_samples:
+        type: integer
+        minimum: 1
+        default: 10
+      base_seed:
+        type: integer
+        default: 1000
+
+  output:
+    type: object
+    properties:
+      base_dir:
+        type: string
+        default: "data/experiments"
+      create_timestamp:
+        type: boolean
+        default: true
+      log_level:
+        type: string
+        enum: ["DEBUG", "INFO", "WARNING", "ERROR"]
+        default: "INFO"
