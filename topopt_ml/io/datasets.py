@@ -8,6 +8,31 @@ from pathlib import Path
 from typing import Tuple, List, Dict, Optional
 
 
+def _resolve_dataset_path(dataset_dir: str) -> Path:
+    """
+    Resolve dataset directory path relative to project root.
+    
+    Handles both absolute and relative paths, resolving relative paths
+    from the project root (not the current working directory).
+    """
+    path = Path(dataset_dir)
+    
+    # If already absolute or exists from cwd, use as-is
+    if path.is_absolute() or path.exists():
+        return path
+    
+    # Try to find project root by looking for pyproject.toml
+    current = Path(__file__).resolve()
+    for parent in [current] + list(current.parents):
+        if (parent / "pyproject.toml").exists():
+            resolved = parent / dataset_dir
+            if resolved.exists():
+                return resolved
+    
+    # Fallback to original path
+    return path
+
+
 def load_sample(dataset_dir: str, sample_id: str) -> Tuple[np.ndarray, np.ndarray]:
     """
     Load a paired (input, target) sample.
@@ -19,7 +44,7 @@ def load_sample(dataset_dir: str, sample_id: str) -> Tuple[np.ndarray, np.ndarra
     Returns:
         Tuple of (input_tensor, target_density)
     """
-    path = Path(dataset_dir)
+    path = _resolve_dataset_path(dataset_dir)
     X = np.load(path / f"sample_{sample_id}_inputs.npy")
     Y = np.load(path / f"sample_{sample_id}_target.npy")
     return X, Y
@@ -27,7 +52,7 @@ def load_sample(dataset_dir: str, sample_id: str) -> Tuple[np.ndarray, np.ndarra
 
 def load_dataset_index(dataset_dir: str) -> List[Dict]:
     """Load dataset metadata index."""
-    path = Path(dataset_dir) / "dataset_index.json"
+    path = _resolve_dataset_path(dataset_dir) / "dataset_index.json"
     with open(path) as f:
         return json.load(f)
 

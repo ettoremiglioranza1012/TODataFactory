@@ -27,7 +27,7 @@ load:
   radius_max: 5.0
 
 ml:
-  num_samples: 10
+  num_samples: 4
   base_seed: 1000
   save_inputs: true
   save_targets: true
