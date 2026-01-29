@@ -1,0 +1,15 @@
+# Git attributes for language detection
+# GitHub linguist configuration
+
+# Exclude Jupyter notebooks from language statistics
+*.ipynb linguist-detectable=false
+*.ipynb linguist-documentation=true
+
+# Mark vendored code if any
+# solver/vendor/* linguist-vendored
+
+# Force detection for specific languages
+*.py linguist-detectable=true
+*.c linguist-detectable=true
+*.h linguist-detectable=true
+*.yaml linguist-detectable=true
