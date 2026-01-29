@@ -45,9 +45,13 @@ def density_to_vtk(
     return str(output)
 
 
+# Re-export from visualization module for backwards compatibility
 def create_mesh_from_density(density: np.ndarray, threshold: float = 0.3):
     """
     Create a mesh from density field.
+    
+    Note: This function is now provided by topopt_ml.visualization.pyvista_renderer.
+    This import is kept for backwards compatibility.
     
     Args:
         density: Density array
@@ -56,6 +60,8 @@ def create_mesh_from_density(density: np.ndarray, threshold: float = 0.3):
     Returns:
         PyVista mesh object
     """
+    from topopt_ml.visualization.pyvista_renderer import render_density
+    # For backwards compat, just create the mesh without rendering
     try:
         import pyvista as pv
     except ImportError:
@@ -73,3 +79,4 @@ def create_mesh_from_density(density: np.ndarray, threshold: float = 0.3):
         return structure.extract_geometry()
     
     return None
+
