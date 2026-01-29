@@ -2,14 +2,14 @@
 Grid utilities for topology optimization.
 
 Handles grid dimension calculations, memory alignment, and node indexing
-matching the C++ solver implementation.
+matching the C solver implementation.
 """
 
 import numpy as np
 from typing import Tuple
 
 
-# Stencil sizes for SIMD alignment (from C++ definitions.h)
+# Stencil sizes for SIMD alignment (from C definitions.h)
 STENCIL_SIZE_X = 1  # must be 1
 STENCIL_SIZE_Y = 8  # set to 4 for AVX2, or 8 for AVX512
 STENCIL_SIZE_Z = 1  # must be 1
@@ -17,10 +17,10 @@ STENCIL_SIZE_Z = 1  # must be 1
 
 class GridCalculator:
     """
-    Calculate grid dimensions and indexing matching C++ memory layout.
+    Calculate grid dimensions and indexing matching C memory layout.
     
     This class handles the wrap dimensions, padding, and node indexing
-    that must match the C++ solver's internal grid representation.
+    that must match the C solver's internal grid representation.
     """
     
     def __init__(self, nelx: int, nely: int, nelz: int,
@@ -47,7 +47,7 @@ class GridCalculator:
     
     def _compute_wrap_dimensions(self) -> Tuple[int, int, int]:
         """
-        Compute wrapped dimensions matching C++ initializeGridContext.
+        Compute wrapped dimensions matching C initializeGridContext.
         
         Returns node dimensions with padding and halo cells.
         """
@@ -65,13 +65,13 @@ class GridCalculator:
     
     def node_index_to_flat(self, i: int, j: int, k: int) -> int:
         """
-        Convert 3D node index to flat index using C++ scheme.
+        Convert 3D node index to flat index using C scheme.
         
         Args:
             i, j, k: Node indices (0-based)
         
         Returns:
-            Flat index in C++ memory layout
+            Flat index in C memory layout
         """
         return i * self.wrapy * self.wrapz + self.wrapy * k + j
     

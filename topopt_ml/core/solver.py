@@ -1,7 +1,7 @@
 """
-Solver interface for C++ TopOpt binary.
+Solver interface for C TopOpt binary.
 
-Provides a clean Python interface to execute the C++ solver.
+Provides a clean Python interface to execute the C solver.
 """
 
 import subprocess
@@ -16,7 +16,7 @@ from topopt_ml.io.binary import read_density_field
 
 
 class SolverInterface:
-    """Interface to the C++ topology optimization solver."""
+    """Interface to the C topology optimization solver."""
     
     def __init__(self, solver_path: Optional[Path] = None):
         """
@@ -45,7 +45,7 @@ class SolverInterface:
         nl: int = 4
     ) -> Dict:
         """
-        Execute the C++ solver.
+        Execute the C solver.
         
         Args:
             grid_calc: GridCalculator with grid dimensions

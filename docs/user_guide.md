@@ -5,7 +5,7 @@
 Centralized experiment management system for HPC topology optimization with:
 - YAML-based configuration
 - Versioned experiment tracking  
-- Accurate C++ memory layout matching
+- Accurate C memory layout matching
 - Automated workflow execution
 
 ## Files
@@ -38,7 +38,7 @@ ml:
 
 **Key Classes:**
 - `ExperimentConfig`: YAML loader with validation
-- `GridCalculator`: Accurate ndof calculation matching C++
+- `GridCalculator`: Accurate ndof calculation matching C
 - `LoadFactory`: Randomized load generation
 - `ExperimentManager`: Main orchestration
 
@@ -77,7 +77,7 @@ experiments/
 ## Key Features
 
 ### 1. Accurate Memory Layout
-Matches C++ `grid_utilities.c`:
+Matches C `grid_utilities.c`:
 ```python
 # Padding for SIMD alignment
 padding_y = (stencil_y - ((ny + 1) % stencil_y)) % stencil_y

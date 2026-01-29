@@ -4,7 +4,7 @@
 
 ### Prerequisites
 - Python 3.8+
-- GCC 15 (for C++ solver)
+- GCC 15 (for C solver)
 - OpenBLAS and SuiteSparse
 
 ### Installation
@@ -17,7 +17,7 @@ cd TODataFactory
 # Install Python package
 pip install -e ".[dev]"
 
-# Build C++ solver
+# Build C solver
 cd solver && make && cd ..
 ```
 
@@ -28,7 +28,7 @@ topopt_ml/
 ├── core/           # Core algorithms
 │   ├── grid.py     # Grid calculations
 │   ├── loads.py    # Load generation
-│   ├── solver.py   # C++ interface
+│   ├── solver.py   # C interface
 │   └── tensors.py  # Tensor utilities
 ├── io/             # File I/O
 ├── config/         # Configuration

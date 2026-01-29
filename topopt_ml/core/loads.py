@@ -54,7 +54,7 @@ class LoadFactory:
         
         nelx, nely, nelz = self.grid.nelx, self.grid.nely, self.grid.nelz
         
-        # Initialize force vector for C++ solver
+        # Initialize force vector for C solver
         F_solver = np.zeros(self.grid.ndof, dtype=np.float64)
         
         # Number of nodes

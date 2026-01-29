@@ -61,7 +61,7 @@ if dist <= radius:
     load_nodes.append((ix, iy, nelz))  # Top surface
 ```
 
-**2. Force File (C++):**
+**2. Force File (C):**
 ```c
 // stencil_optimization.c
 // Reads a SINGLE force vector from binary file
