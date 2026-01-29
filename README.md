@@ -38,7 +38,7 @@ This project follows a **single-flow architecture** designed around three pillar
                                    │
                                    ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  solver/                         C++ Solver                              │
+│  solver/                         C Solver                                │
 │  └── top3d                       → High-performance topology optimizer   │
 └─────────────────────────────────────────────────────────────────────────┘
                                    │
@@ -56,10 +56,10 @@ This project follows a **single-flow architecture** designed around three pillar
 
 ## The Three Pillars
 
-### 1. Decoupling (Python ↔ C++)
+### 1. Decoupling (Python ↔ C)
 
 - **Python** handles configuration, data orchestration, ML I/O, and visualization
-- **C++** handles the computationally intensive topology optimization solver
+- **C** handles the computationally intensive topology optimization solver
 - Communication via **binary files** with guaranteed memory alignment
 - Neither component knows about the other's internals
 
@@ -152,7 +152,7 @@ NewAM/
 │   ├── io/               # File I/O (binary, numpy, VTK)
 │   ├── experiments/      # Experiment management
 │   └── visualization/    # PyVista rendering & validation
-├── solver/               # C++ topology optimization solver
+├── solver/               # C topology optimization solver
 ├── examples/             # API usage examples (not for production)
 ├── notebooks/            # Jupyter notebooks for exploration
 └── outputs/              # Generated datasets (gitignored)
