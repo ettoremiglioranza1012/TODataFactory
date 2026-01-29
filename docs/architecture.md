@@ -19,24 +19,24 @@ TODataFactory is a production-grade ML pipeline for topology optimization, consi
                              ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                   ExperimentManager                         │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐       │
-│  │ GridCalculator │ │ LoadFactory │ │ SolverInterface │       │
-│  └──────┬──────┘   └──────┬──────┘   └──────┬──────┘       │
+│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐        │
+│  │ GridCalcula │   │ LoadFactory │   │ SolverInter │        │
+│  └──────┬──────┘   └──────┬──────┘   └──────┬──────┘        │
 │         │                 │                 │               │
 │         ▼                 ▼                 ▼               │
-│  ┌──────────────────────────────────────────────┐          │
-│  │              Solver Execution                │          │
-│  │   Python → Binary Load File → C top3d     │          │
-│  │   C → Binary Density File → Python        │          │
-│  └──────────────────────────────────────────────┘          │
+│  ┌──────────────────────────────────────────────┐           │
+│  │              Solver Execution                │           │
+│  │   Python → Binary Load File → C top3d        │           │
+│  │   C → Binary Density File → Python           │           │
+│  └──────────────────────────────────────────────┘           │
 └─────────────────────────────────────────────────────────────┘
                              │
                              ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    Dataset Output                           │
-│  sample_XXXX_inputs.npy (4-channel tensor)                 │
-│  sample_XXXX_target.npy (density field)                    │
-│  dataset_index.json (metadata)                             │
+│  sample_XXXX_inputs.npy (4-channel tensor)                  │
+│  sample_XXXX_target.npy (density field)                     │
+│  dataset_index.json (metadata)                              │
 └─────────────────────────────────────────────────────────────┘
 ```
 
