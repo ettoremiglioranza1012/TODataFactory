@@ -1,0 +1,41 @@
+# Varied Load Patterns Configuration
+# Experiments with diverse load configurations
+
+grid:
+  nx: 64
+  ny: 32
+  nz: 32
+  vol_fraction: 0.2
+
+solver:
+  nl: 4
+  rmin: 1.5
+  penal: 3.0
+  max_iter: 20
+
+hpc:
+  stencil_size_x: 1
+  stencil_size_y: 8
+  stencil_size_z: 1
+  num_threads: 10
+
+load:
+  total_force: -1500.0      # Stronger force
+  center_min_frac: 0.1      # Much wider range of load positions
+  center_max_frac: 0.9
+  radius_min: 2.0           # Wider range of patch sizes
+  radius_max: 8.0
+  patch_shape: "circular"
+
+ml:
+  num_samples: 15           # More samples for diverse dataset
+  base_seed: 4000
+  save_inputs: true
+  save_targets: true
+  save_vtk: false
+
+output:
+  base_dir: "data/experiments"
+  create_timestamp: true
+  save_config: true
+  log_level: "INFO"

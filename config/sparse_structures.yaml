@@ -1,0 +1,41 @@
+# Sparse Structures Configuration
+# Low volume fraction for challenging optimization
+
+grid:
+  nx: 64
+  ny: 32
+  nz: 32
+  vol_fraction: 0.1       # Very sparse - only 10% material
+
+solver:
+  nl: 4
+  rmin: 1.5
+  penal: 3.5              # Higher penalization for sharper boundaries
+  max_iter: 25            # More iterations for difficult convergence
+
+hpc:
+  stencil_size_x: 1
+  stencil_size_y: 8
+  stencil_size_z: 1
+  num_threads: 10
+
+load:
+  total_force: -800.0     # Moderate force
+  center_min_frac: 0.2
+  center_max_frac: 0.8
+  radius_min: 3.0
+  radius_max: 6.0
+  patch_shape: "circular"
+
+ml:
+  num_samples: 8
+  base_seed: 5000
+  save_inputs: true
+  save_targets: true
+  save_vtk: true          # VTK to visualize sparse structures
+
+output:
+  base_dir: "data/experiments"
+  create_timestamp: true
+  save_config: true
+  log_level: "INFO"

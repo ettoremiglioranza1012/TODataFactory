@@ -1,0 +1,41 @@
+# Quick Test Configuration
+# Fast iterations for testing and debugging
+
+grid:
+  nx: 32              # Smaller grid for faster computation
+  ny: 16
+  nz: 16
+  vol_fraction: 0.25  # Slightly higher volume fraction
+
+solver:
+  nl: 3               # Fewer multigrid levels for small grid
+  rmin: 1.5
+  penal: 3.0
+  max_iter: 5         # Just 5 iterations for quick testing
+
+hpc:
+  stencil_size_x: 1
+  stencil_size_y: 8
+  stencil_size_z: 1
+  num_threads: 4      # Fewer threads for small problem
+
+load:
+  total_force: -500.0       # Smaller force
+  center_min_frac: 0.3
+  center_max_frac: 0.7
+  radius_min: 2.0
+  radius_max: 4.0
+  patch_shape: "circular"
+
+ml:
+  num_samples: 3            # Just a few samples for testing
+  base_seed: 2000
+  save_inputs: true
+  save_targets: true
+  save_vtk: true            # Include VTK for visual inspection
+
+output:
+  base_dir: "data/experiments"
+  create_timestamp: true
+  save_config: true
+  log_level: "DEBUG"        # More verbose for debugging
