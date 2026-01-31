@@ -73,6 +73,14 @@ class ConfigLoader:
         return self.config.get('load', {})
     
     @property
+    def boundary_conditions(self) -> Dict:
+        """Get boundary conditions configuration."""
+        return self.config.get('boundary_conditions', {
+            'bc_type': 'cantilever_left',  # Default fallback
+            'random_weights': None
+        })
+    
+    @property
     def output(self) -> Dict:
         return self.config.get('output', {})
 
@@ -80,3 +88,4 @@ class ConfigLoader:
 def load_config(path: str = "config/default.yaml") -> ConfigLoader:
     """Convenience function to load configuration."""
     return ConfigLoader(path)
+

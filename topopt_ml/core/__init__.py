@@ -9,6 +9,7 @@ from topopt_ml.core.grid import (
     STENCIL_SIZE_Z,
 )
 from topopt_ml.core.loads import LoadFactory
+from topopt_ml.core.boundary_conditions import BCFactory, BC_TYPES, get_bc_types
 from topopt_ml.core.solver import SolverInterface
 from topopt_ml.core.tensors import (
     create_input_tensor,
@@ -21,6 +22,9 @@ from topopt_ml.core.tensors import (
 __all__ = [
     'GridCalculator',
     'LoadFactory',
+    'BCFactory',
+    'BC_TYPES',
+    'get_bc_types',
     'SolverInterface',
     'compute_wrap_dimensions',
     'compute_ndof',
@@ -33,3 +37,4 @@ __all__ = [
     'STENCIL_SIZE_Y',
     'STENCIL_SIZE_Z',
 ]
+

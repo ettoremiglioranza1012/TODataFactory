@@ -13,9 +13,10 @@ int main(int argc, char *argv[]) {
   int iters = 20;
   int nl = 4;
   char *load_file_path = NULL; // Optional load file path
+  char *bc_file_path = NULL;   // Optional boundary condition file path
   int opt;
 
-  while ((opt = getopt(argc, argv, "x:y:z:r:v:i:l:f:")) != -1) {
+  while ((opt = getopt(argc, argv, "x:y:z:r:v:i:l:f:b:")) != -1) {
     switch (opt) {
     case 'x':
       nelx_coarse = atoi(optarg);
@@ -41,8 +42,13 @@ int main(int argc, char *argv[]) {
     case 'f':
       load_file_path = optarg; // Path to binary load file
       break;
+    case 'b':
+      bc_file_path = optarg; // Path to binary BC file
+      break;
     default:
-      fprintf(stderr, "Usage: %s [-xyzrvil] [-f load_file_path]\n", argv[0]);
+      fprintf(stderr,
+              "Usage: %s [-xyzrvil] [-f load_file_path] [-b bc_file_path]\n",
+              argv[0]);
       exit(EXIT_FAILURE);
     }
   }
@@ -63,9 +69,15 @@ int main(int argc, char *argv[]) {
          nelx_coarse, nelx, nely_coarse, nely, nelz_coarse, nelz,
          nelx * nely * nelz, volfrac, rmin, iters);
 
+  if (bc_file_path != NULL) {
+    printf("📁 BC file: %s\n", bc_file_path);
+  } else {
+    printf("📁 BC: Using hardcoded cantilever\n");
+  }
+
   const float cgtol = 1e-5;
   const int cgmax = 200;
 
   top3dmgcg(nelx, nely, nelz, volfrac, rmin, nl, iters, cgtol, cgmax,
-            load_file_path);
+            load_file_path, bc_file_path);
 }

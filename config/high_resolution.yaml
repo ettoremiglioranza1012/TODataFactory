@@ -27,8 +27,18 @@ load:
   radius_max: 8.0
   patch_shape: "circular"
 
+# Boundary Conditions
+boundary_conditions:
+  bc_type: "random"         # Randomize BC for diverse dataset
+  random_weights:           # Probability weights for random BC selection
+    cantilever_left: 1.0
+    cantilever_right: 1.0
+    simply_supported: 1.0
+    corner_fixed: 0.5
+    bridge: 0.5
+
 ml:
-  num_samples: 5
+  num_samples: 10
   base_seed: 3000
   save_inputs: true
   save_targets: true

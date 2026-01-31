@@ -39,6 +39,49 @@ filename, input_tensor, metadata = factory.generate_random_load(
 )
 ```
 
+### BCFactory
+
+Generate configurable boundary conditions for diverse structural problems.
+
+```python
+from topopt_ml.core import BCFactory, BC_TYPES, get_bc_types
+
+# Available BC types
+print(BC_TYPES)  # ['cantilever_left', 'cantilever_right', 'simply_supported', 'corner_fixed', 'bridge']
+
+bc_factory = BCFactory(grid_calc)
+
+# Generate specific BC type
+filename, metadata = bc_factory.generate_bc('simply_supported', 'bc.bin')
+
+# Generate random BC with weights
+weights = {
+    'cantilever_left': 1.0,
+    'cantilever_right': 1.0,
+    'simply_supported': 1.0,
+    'corner_fixed': 0.5,
+    'bridge': 0.5
+}
+filename, metadata = bc_factory.generate_random_bc(
+    filename='bc.bin',
+    weights=weights,
+    random_seed=42
+)
+
+# Metadata includes:
+# - bc_type: str
+# - num_fixed_dofs: int  
+# - num_fixed_nodes: int
+# - fixed_node_locations: dict
+```
+
+**BC Types:**
+- `cantilever_left`: Left face fixed (classic cantilever beam)
+- `cantilever_right`: Right face fixed (inverted cantilever)
+- `simply_supported`: Z-displacement fixed on left/right edges
+- `corner_fixed`: All DOFs fixed at 4 bottom corners
+- `bridge`: Z-fixed along two parallel edge lines
+
 ### SolverInterface
 
 ```python
@@ -48,7 +91,8 @@ solver = SolverInterface(solver_path="solver/top3d")
 
 result = solver.run(
     grid_calc, load_file,
-    vol_frac=0.2, rmin=1.5, max_iter=20, nl=4
+    vol_frac=0.2, rmin=1.5, max_iter=20, nl=4,
+    bc_file="bc.bin"  # Optional: custom BC file
 )
 
 density = solver.read_density_output(grid_calc)

@@ -42,7 +42,8 @@ class SolverInterface:
         rmin: float = 1.5,
         penal: float = 3.0,
         max_iter: int = 20,
-        nl: int = 4
+        nl: int = 4,
+        bc_file: Optional[str] = None
     ) -> Dict:
         """
         Execute the C solver.
@@ -55,6 +56,7 @@ class SolverInterface:
             penal: SIMP penalization
             max_iter: Maximum iterations
             nl: Number of multigrid levels
+            bc_file: Optional path to binary BC file. If None, uses hardcoded cantilever.
         
         Returns:
             Dictionary with success status, output, timing
@@ -77,6 +79,10 @@ class SolverInterface:
             "-l", str(nl),
             "-f", load_file
         ]
+        
+        # Add BC file if provided
+        if bc_file is not None:
+            cmd.extend(["-b", bc_file])
         
         # Execute
         result = subprocess.run(

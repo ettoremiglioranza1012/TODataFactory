@@ -31,6 +31,17 @@ load:
   radius_max: 5.0           # Max patch radius (elements)
   patch_shape: "circular"   # Load patch shape: circular, square
 
+# Boundary Conditions
+boundary_conditions:
+  bc_type: "random"         # BC type: random, cantilever_left, cantilever_right, 
+                            #          simply_supported, corner_fixed, bridge
+  random_weights:           # Probability weights for random BC selection
+    cantilever_left: 1.0
+    cantilever_right: 1.0
+    simply_supported: 1.0
+    corner_fixed: 0.5
+    bridge: 0.5
+
 # ML Dataset Generation
 ml:
   num_samples: 10           # Number of samples to generate
@@ -45,3 +56,4 @@ output:
   create_timestamp: true    # Add timestamp to experiment folder
   save_config: true         # Save copy of config in experiment folder
   log_level: "INFO"         # Logging level: DEBUG, INFO, WARNING, ERROR
+

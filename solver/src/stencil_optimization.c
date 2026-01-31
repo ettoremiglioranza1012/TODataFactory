@@ -18,7 +18,7 @@ void top3dmgcg(const uint_fast32_t nelx, const uint_fast32_t nely,
                const uint_fast32_t nelz, const DTYPE volfrac, const DTYPE rmin,
                const uint_fast32_t nl, const int design_iters,
                const float cgtol, const uint_fast32_t cgmax,
-               const char *load_file_path) {
+               const char *load_file_path, const char *bc_file_path) {
 
   struct gridContext gridContext;
   gridContext.E0 = 1;
@@ -33,7 +33,8 @@ void top3dmgcg(const uint_fast32_t nelx, const uint_fast32_t nely,
   gridContext.elementSizeY = 0.5;
   gridContext.elementSizeZ = 0.5;
 
-  initializeGridContext(&gridContext, nl);
+  // Initialize grid context with optional BC file
+  initializeGridContextWithBC(&gridContext, nl, bc_file_path);
 
   const uint_fast64_t nelem = (gridContext.wrapx - 1) *
                               (gridContext.wrapy - 1) * (gridContext.wrapz - 1);

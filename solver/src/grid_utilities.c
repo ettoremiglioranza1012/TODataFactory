@@ -62,7 +62,149 @@ void setFixedDof_halo(struct gridContext *gc, const int l) {
   }
 }
 
+void setFixedDof_halo_from_file(struct gridContext *gc, const int l,
+                                 const char *bc_file_path) {
+  // ========================================
+  // Read fixed DOF indices from binary file
+  // ========================================
+  // File format: int32 array of DOF indices
+  // These are for level 0 (fine grid), need to scale for coarser levels
+
+  if (bc_file_path == NULL) {
+    // Fall back to hardcoded cantilever
+    setFixedDof_halo(gc, l);
+    return;
+  }
+
+  FILE *bc_file = fopen(bc_file_path, "rb");
+  if (bc_file == NULL) {
+    fprintf(stderr,
+            "⚠️  Warning: Could not open BC file: %s, using fallback\n",
+            bc_file_path);
+    setFixedDof_halo(gc, l);
+    return;
+  }
+
+  // Get file size to determine number of DOFs
+  fseek(bc_file, 0, SEEK_END);
+  long file_size = ftell(bc_file);
+  fseek(bc_file, 0, SEEK_SET);
+
+  int32_t num_dofs = file_size / sizeof(int32_t);
+  if (num_dofs <= 0) {
+    fprintf(stderr, "⚠️  Warning: Empty BC file, using fallback\n");
+    fclose(bc_file);
+    setFixedDof_halo(gc, l);
+    return;
+  }
+
+  // Read DOF indices for level 0
+  int32_t *fine_dofs = malloc(sizeof(int32_t) * num_dofs);
+  size_t items_read = fread(fine_dofs, sizeof(int32_t), num_dofs, bc_file);
+  fclose(bc_file);
+
+  if (items_read != (size_t)num_dofs) {
+    fprintf(stderr, "⚠️  Warning: Failed to read BC file, using fallback\n");
+    free(fine_dofs);
+    setFixedDof_halo(gc, l);
+    return;
+  }
+
+  // For coarser levels, we need to map DOFs from fine to coarse
+  const int ncell = pow(2, l);
+
+  if (l == 0) {
+    // Fine level - use DOFs directly
+    (*gc).fixedDofs[l].n = num_dofs;
+    (*gc).fixedDofs[l].idx = malloc(sizeof(uint_fast32_t) * num_dofs);
+
+    for (int i = 0; i < num_dofs; i++) {
+      (*gc).fixedDofs[l].idx[i] = (uint_fast32_t)fine_dofs[i];
+    }
+
+    printf("📍 BC Level %d: Read %d fixed DOFs from file\n", l, num_dofs);
+  } else {
+    // Coarser levels - need to map node indices
+    // DOF = 3 * node_idx + component
+    // node_idx = i * wrapy * wrapz + wrapy * k + j
+
+    const int32_t nelyc = (*gc).nely / ncell;
+    const int32_t nelzc = (*gc).nelz / ncell;
+
+    const int paddingyc =
+        (STENCIL_SIZE_Y - ((nelyc + 1) % STENCIL_SIZE_Y)) % STENCIL_SIZE_Y;
+    const int paddingzc =
+        (STENCIL_SIZE_Z - ((nelzc + 1) % STENCIL_SIZE_Z)) % STENCIL_SIZE_Z;
+
+    const int wrapyc = nelyc + paddingyc + 3;
+    const int wrapzc = nelzc + paddingzc + 3;
+
+    // Fine grid wrap dimensions
+    const int wrapy_fine = (*gc).wrapy;
+    const int wrapz_fine = (*gc).wrapz;
+
+    // Create a set of unique coarse DOFs
+    // Use a temporary larger buffer and count unique entries
+    uint_fast32_t *temp_dofs = malloc(sizeof(uint_fast32_t) * num_dofs);
+    int coarse_count = 0;
+
+    for (int d = 0; d < num_dofs; d++) {
+      int32_t fine_dof = fine_dofs[d];
+      int component = fine_dof % 3;
+      int fine_node = fine_dof / 3;
+
+      // Extract fine node coordinates
+      int i_fine = fine_node / (wrapy_fine * wrapz_fine);
+      int rem = fine_node % (wrapy_fine * wrapz_fine);
+      int k_fine = rem / wrapy_fine;
+      int j_fine = rem % wrapy_fine;
+
+      // Map to coarse coordinates
+      int i_coarse = (i_fine - 1) / ncell + 1;
+      int j_coarse = (j_fine - 1) / ncell + 1;
+      int k_coarse = (k_fine - 1) / ncell + 1;
+
+      // Ensure within bounds
+      if (i_coarse >= 1 && j_coarse >= 1 && k_coarse >= 1) {
+        uint_fast32_t coarse_node =
+            i_coarse * wrapyc * wrapzc + wrapyc * k_coarse + j_coarse;
+        uint_fast32_t coarse_dof = 3 * coarse_node + component;
+
+        // Check if already added (simple linear search for small counts)
+        int found = 0;
+        for (int c = 0; c < coarse_count; c++) {
+          if (temp_dofs[c] == coarse_dof) {
+            found = 1;
+            break;
+          }
+        }
+
+        if (!found) {
+          temp_dofs[coarse_count++] = coarse_dof;
+        }
+      }
+    }
+
+    (*gc).fixedDofs[l].n = coarse_count;
+    (*gc).fixedDofs[l].idx = malloc(sizeof(uint_fast32_t) * coarse_count);
+    for (int i = 0; i < coarse_count; i++) {
+      (*gc).fixedDofs[l].idx[i] = temp_dofs[i];
+    }
+
+    free(temp_dofs);
+    printf("📍 BC Level %d: Mapped to %d fixed DOFs\n", l, coarse_count);
+  }
+
+  free(fine_dofs);
+}
+
 void initializeGridContext(struct gridContext *gc, const int nl) {
+  // Initialize with NULL bc_file_path (uses hardcoded cantilever)
+  initializeGridContextWithBC(gc, nl, NULL);
+}
+
+void initializeGridContextWithBC(struct gridContext *gc, const int nl,
+                                  const char *bc_file_path) {
 
   const int paddingx =
       (STENCIL_SIZE_X - (((*gc).nelx + 1) % STENCIL_SIZE_X)) % STENCIL_SIZE_X;
@@ -84,7 +226,8 @@ void initializeGridContext(struct gridContext *gc, const int nl) {
     (*gc).precomputedKE[l] = malloc(sizeof(MTYPE) * pKESize);
     getKEsubspace((*gc).precomputedKE[l], (*gc).nu, l);
 
-    setFixedDof_halo(gc, l);
+    // Use file-based BCs if path provided, otherwise hardcoded
+    setFixedDof_halo_from_file(gc, l, bc_file_path);
   }
 }
 
