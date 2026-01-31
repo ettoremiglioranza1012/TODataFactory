@@ -10,45 +10,45 @@ This project follows a **single-flow architecture** designed around three pillar
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                              USER                                        │
+│                              USER                                       │
 └─────────────────────────────────────────────────────────────────────────┘
                                    │
                                    ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  scripts/                        CLI Entry Points                        │
+│  scripts/                        CLI Entry Points                       │
 │  ├── generate_dataset.py         → Dataset generation pipeline          │
 │  └── validate_dataset.py         → Validation & visualization           │
 └─────────────────────────────────────────────────────────────────────────┘
                                    │
                                    ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  configs/                        Configuration (YAML)                    │
+│  configs/                        Configuration (YAML)                   │
 │  └── experiment.yaml             → All parameters in one place          │
 └─────────────────────────────────────────────────────────────────────────┘
                                    │
                                    ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  topopt_ml/                      Python Library                          │
-│  ├── config/                     → Configuration loading                 │
-│  ├── core/                       → Grid, loads, solver interface         │
-│  ├── io/                         → Data I/O (binary, numpy)              │
-│  ├── experiments/                → Experiment management                 │
-│  └── visualization/              → Rendering & validation                │
+│  topopt_ml/                      Python Library                         │
+│  ├── config/                     → Configuration loading                │
+│  ├── core/                       → Grid, loads, solver interface        │
+│  ├── io/                         → Data I/O (binary, numpy)             │
+│  ├── experiments/                → Experiment management                │
+│  └── visualization/              → Rendering & validation               │
 └─────────────────────────────────────────────────────────────────────────┘
                                    │
                                    ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  solver/                         C Solver                                │
-│  └── top3d                       → High-performance topology optimizer   │
+│  solver/                         C Solver                               │
+│  └── top3d                       → High-performance topology optimizer  │
 └─────────────────────────────────────────────────────────────────────────┘
                                    │
                                    ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  outputs/                        Data Storage                            │
-│  └── experiment_name/            → Standardized experiment folder        │
-│      ├── sample_XXX_inputs.npy   → ML input tensors (4 channels)         │
-│      ├── sample_XXX_target.npy   → Optimized density (labels)            │
-│      └── dataset_index.json      → Metadata for all samples              │
+│  outputs/                        Data Storage                           │
+│  └── experiment_name/            → Standardized experiment folder       │
+│      ├── sample_XXX_inputs.npy   → ML input tensors (4 channels)        │
+│      ├── sample_XXX_target.npy   → Optimized density (labels)           │
+│      └── dataset_index.json      → Metadata for all samples             │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
